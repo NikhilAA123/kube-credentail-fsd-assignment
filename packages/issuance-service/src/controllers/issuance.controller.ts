@@ -6,6 +6,9 @@ export const issueCredential = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(
+    `[${new Date().toISOString()}] Received request to issue credential.`
+  );
   try {
     const { credential } = req.body;
 
