@@ -1,22 +1,39 @@
 import fs from "fs/promises";
 import path from "path";
 
-const DB_PATH = path.join(__dirname, "..", "..", "data", "credentials.json");
+const dataDir = "/usr/src/app/data"; // ✅ shared volume location
+const dbPath = path.join(dataDir, "credentials.json");
 
-export const readDatabase = async (): Promise<any[]> => {
+interface CredentialRecord {
+  credential: any;
+  issuedBy: string;
+  issuedAt: string;
+}
+
+// Ensures the data directory exists before any operation
+const ensureDataDirExists = async () => {
+  await fs.mkdir(dataDir, { recursive: true });
+};
+
+export const readDatabase = async (): Promise<CredentialRecord[]> => {
+  await ensureDataDirExists();
   try {
-    const data = await fs.readFile(DB_PATH, "utf-8");
+    const data = await fs.readFile(dbPath, "utf-8");
     return JSON.parse(data);
-  } catch (error) {
-    return [];
+  } catch (error: any) {
+    // If the file doesn't exist, return an empty array
+    if (error.code === "ENOENT") {
+      return [];
+    }
+    throw error;
   }
 };
 
-export const writeDatabase = async (data: any[]): Promise<void> => {
-  try {
-    await fs.mkdir(path.dirname(DB_PATH), { recursive: true });
-    await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2));
-  } catch (error) {
-    console.error("Error writing to database:", error);
-  }
+export const writeDatabase = async (
+  records: CredentialRecord[]
+): Promise<void> => {
+  await ensureDataDirExists();
+  await fs.writeFile(dbPath, JSON.stringify(records, null, 2), "utf-8");
+  console.log(`[DB] Saved ${records.length} credential(s)`);
+  console.log(`[DB] Location: ${dbPath}`);
 };
