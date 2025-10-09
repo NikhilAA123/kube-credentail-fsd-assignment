@@ -1,0 +1,17 @@
+services:
+  issuance-service:
+    build: ./packages/issuance-service
+    ports:
+      - "4001:3001"
+    volumes:
+      - credential_data:/usr/src/app/data
+
+  verification-service:
+    build: ./packages/verification-service
+    ports:
+      - "4002:3002"
+    volumes:
+      - credential_data:/usr/src/app/data
+
+volumes:
+  credential_data:
