@@ -1,8 +1,12 @@
 import fs from "fs/promises";
 import path from "path";
 
-const dataDir = "/usr/src/app/data"; // ✅ shared volume location
+// Use the DB_PATH from the environment, or default to a local 'data' folder
+const dataDir = process.env.DB_PATH || path.join(process.cwd(), "data");
 const dbPath = path.join(dataDir, "credentials.json");
+
+// Add a log to show which path is being used
+console.log(`[DB] Using database location: ${dbPath}`);
 
 interface CredentialRecord {
   credential: any;
@@ -10,9 +14,11 @@ interface CredentialRecord {
   issuedAt: string;
 }
 
-// Ensures the data directory exists before any operation
 const ensureDataDirExists = async () => {
-  await fs.mkdir(dataDir, { recursive: true });
+  // Only create the directory if we are using the local path
+  if (!process.env.DB_PATH) {
+    await fs.mkdir(dataDir, { recursive: true });
+  }
 };
 
 export const readDatabase = async (): Promise<CredentialRecord[]> => {
@@ -21,7 +27,6 @@ export const readDatabase = async (): Promise<CredentialRecord[]> => {
     const data = await fs.readFile(dbPath, "utf-8");
     return JSON.parse(data);
   } catch (error: any) {
-    // If the file doesn't exist, return an empty array
     if (error.code === "ENOENT") {
       return [];
     }
