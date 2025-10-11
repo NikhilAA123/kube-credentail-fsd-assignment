@@ -11,7 +11,7 @@ import {
   useToast,
   Code,
 } from "@chakra-ui/react";
-// 1. Remove the unused 'AxiosError' from the import
+import { issueCredential } from "../services/api"; // Import our new function
 import axios from "axios";
 
 const IssueCredentialForm = () => {
@@ -44,27 +44,26 @@ const IssueCredentialForm = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8081/issue", {
+      // Use the refactored API function
+      const response = await issueCredential({
         userId,
         credentialType,
         claims: parsedClaims,
       });
 
-      setSignedCredential(response.data.signedCredential);
+      setSignedCredential(response.signedCredential);
       toast({
         title: "Success!",
-        description: `Credential issued by ${response.data.workerId}`,
+        description: `Credential issued by ${response.workerId}`,
         status: "success",
         duration: 5000,
         isClosable: true,
       });
     } catch (error) {
       let errorMessage = "Something went wrong.";
-      // 2. This type guard works without the direct import
       if (axios.isAxiosError(error)) {
         errorMessage = error.response?.data?.message || error.message;
       }
-
       toast({
         title: "API Error",
         description: errorMessage,
@@ -119,7 +118,12 @@ const IssueCredentialForm = () => {
           <Heading size="md" mb={2}>
             Signed Credential (JWT)
           </Heading>
-          <Code p={4} display="block" whiteSpace="pre-wrap">
+          <Code
+            p={4}
+            display="block"
+            whiteSpace="pre-wrap"
+            wordBreak="break-all"
+          >
             {signedCredential}
           </Code>
         </Box>
