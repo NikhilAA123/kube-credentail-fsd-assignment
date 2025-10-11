@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyCredential } from "../src/controllers/verification.controller";
+// 1. Import the correct controller function name
+import { verifyCredentialController } from "../src/controllers/verification.controller";
 import * as databaseService from "../src/services/database.service";
 
 // Mock the database service to isolate our controller
@@ -19,71 +20,96 @@ describe("Verification Controller", () => {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
+    jest.clearAllMocks();
   });
 
-  // Test Case 1: Successful Verification
-  test("should return 200 if the credential exists", async () => {
-    const existingCredential = { name: "test-user", course: "testing" };
-    mockRequest.body = { credential: existingCredential };
+  // --- Test Case 1: Successful Verification ---
+  test("should return 200 and isValid:true if the credential exists", async () => {
+    // Arrange: Create a credential object with a unique ID
+    const credentialToVerify = {
+      id: "http://example.edu/credentials/some-unique-id",
+      name: "test-user",
+      course: "testing",
+    };
 
-    // Tell our mock to return a "database" containing the credential
+    // Arrange: Simulate what the frontend does - stringify and encode
+    const signedCredential = Buffer.from(
+      JSON.stringify(credentialToVerify)
+    ).toString("base64");
+    mockRequest.body = { signedCredential }; // 2. Send the correct request body
+
+    // Arrange: Mock the database to return a record containing this credential
     (databaseService.readDatabase as jest.Mock).mockResolvedValue([
       {
-        credential: existingCredential,
+        credential: credentialToVerify, // The DB stores the decoded object
         issuedBy: "Pantham",
         issuedAt: new Date().toISOString(),
       },
     ]);
 
-    await verifyCredential(
+    // Act: Call the controller
+    await verifyCredentialController(
       mockRequest as Request,
       mockResponse as Response,
       mockNext
     );
 
-    // Assertions: Check for a 200 OK response
+    // Assert: Check for a 200 OK response with the correct shape
     expect(mockResponse.status).toHaveBeenCalledWith(200);
     expect(mockResponse.json).toHaveBeenCalledWith({
-      message: "Credential verified successfully.",
-      data: expect.any(Object),
+      // 3. Check for the correct response shape
+      isValid: true,
+      message: "Credential is valid and has been issued.",
+      details: {
+        issuedBy: "Pantham",
+        issuedAt: expect.any(String),
+      },
     });
   });
 
-  // Test Case 2: Credential Not Found
-  test("should return 404 if the credential does not exist", async () => {
-    mockRequest.body = {
-      credential: { name: "non-existent-user", course: "testing" },
-    };
+  // --- Test Case 2: Credential Not Found ---
+  test("should return 404 and isValid:false if the credential does not exist", async () => {
+    // Arrange: Create a credential that won't be in the mock DB
+    const credentialToVerify = { id: "not-found-id" };
+    const signedCredential = Buffer.from(
+      JSON.stringify(credentialToVerify)
+    ).toString("base64");
+    mockRequest.body = { signedCredential };
 
-    // Tell our mock to return an empty database
+    // Arrange: Mock the database to return an empty array
     (databaseService.readDatabase as jest.Mock).mockResolvedValue([]);
 
-    await verifyCredential(
+    // Act
+    await verifyCredentialController(
       mockRequest as Request,
       mockResponse as Response,
       mockNext
     );
 
-    // Assertions: Check for a 404 Not Found response
+    // Assert: Check for a 404 Not Found with the correct response shape
     expect(mockResponse.status).toHaveBeenCalledWith(404);
     expect(mockResponse.json).toHaveBeenCalledWith({
-      message: "Credential not found or has not been issued.",
+      isValid: false,
+      message: "Credential not found. It has not been issued or is invalid.",
     });
   });
 
-  // Test Case 3: Missing Credential Data in Request
-  test("should return 400 if credential data is missing", async () => {
-    // Request body is empty by default from our beforeEach setup
-    await verifyCredential(
+  // --- Test Case 3: Missing Credential Data in Request ---
+  test("should return 400 if signedCredential is missing", async () => {
+    // Arrange: Request body is empty by default from our beforeEach setup
+    mockRequest.body = {};
+
+    // Act
+    await verifyCredentialController(
       mockRequest as Request,
       mockResponse as Response,
       mockNext
     );
 
-    // Assertions: Check for a 400 Bad Request response
+    // Assert: Check for a 400 Bad Request with the correct error message
     expect(mockResponse.status).toHaveBeenCalledWith(400);
     expect(mockResponse.json).toHaveBeenCalledWith({
-      error: "Credential data is required.",
+      error: "signedCredential is required.",
     });
   });
 });
