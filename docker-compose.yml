@@ -2,16 +2,20 @@ services:
   issuance-service:
     build: ./packages/issuance-service
     ports:
-      - "4001:3001"
+      - "8081:8081"
     volumes:
       - credential_data:/usr/src/app/data
+    environment: # Add this section
+      - DB_PATH=/usr/src/app/data
 
   verification-service:
     build: ./packages/verification-service
     ports:
-      - "4002:3002"
+      - "8082:8082"
     volumes:
       - credential_data:/usr/src/app/data
+    environment: # Add this section
+      - DB_PATH=/usr/src/app/data
 
 volumes:
   credential_data:
