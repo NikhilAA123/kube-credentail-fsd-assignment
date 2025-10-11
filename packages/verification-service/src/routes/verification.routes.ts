@@ -1,9 +1,9 @@
-import * as express from "express";
-import { verifyCredential } from "../controllers/verification.controller";
+import { Router } from "express";
+import { verifyCredentialController } from "../controllers/verification.controller";
 
-const router = express.Router();
+const router = Router();
 
-// Define the POST route for verification
-router.post("/verify", verifyCredential);
+// Let's define the route directly on the root of the router.
+router.route("/verify").post(verifyCredentialController);
 
 export default router;
