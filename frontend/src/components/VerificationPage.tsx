@@ -1,12 +1,7 @@
-import { Box, Heading } from "@chakra-ui/react";
+import VerificationForm from "./VerificationForm";
 
 const VerificationPage = () => {
-  return (
-    <Box>
-      <Heading>Verify a Credential</Heading>
-      {/* The verification form will go here */}
-    </Box>
-  );
+  return <VerificationForm />;
 };
 
 export default VerificationPage;
