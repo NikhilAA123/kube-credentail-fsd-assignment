@@ -23,3 +23,26 @@ export const issueCredential = async (
   const response = await apiClient.post("/issue", payload);
   return response.data;
 };
+interface VerifyPayload {
+  signedCredential: string;
+}
+
+interface VerifyResponse {
+  isValid: boolean;
+  message: string;
+  details?: {
+    issuedBy: string;
+    issuedAt: string;
+  };
+}
+
+const verifyApiClient = axios.create({
+  baseURL: "http://localhost:8082", // Verification service will run on this port
+});
+
+export const verifyCredential = async (
+  payload: VerifyPayload
+): Promise<VerifyResponse> => {
+  const response = await verifyApiClient.post("/verify", payload);
+  return response.data;
+};
