@@ -1,0 +1,21 @@
+# k8s/verification-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: verification-service-deployment
+  namespace: kube-credential-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: verification-service
+  template:
+    metadata:
+      labels:
+        app: verification-service
+    spec:
+      containers:
+        - name: verification-service
+          image: 885706662470.dkr.ecr.us-east-1.amazonaws.com/verification-service:latest # <-- REPLACE THIS
+          ports:
+            - containerPort: 8082

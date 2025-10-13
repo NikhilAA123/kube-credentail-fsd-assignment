@@ -1,0 +1,15 @@
+# k8s/issuance-service.yaml
+# k8s/issuance-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: issuance-service
+  namespace: kube-credential-ns
+spec:
+  selector:
+    app: issuance-service
+  type: LoadBalancer # <-- ADD THIS LINE
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081

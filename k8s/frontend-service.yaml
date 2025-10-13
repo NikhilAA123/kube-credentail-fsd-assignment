@@ -1,0 +1,14 @@
+# k8s/frontend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: kube-credential-ns
+spec:
+  selector:
+    app: frontend
+  type: LoadBalancer # <-- CHANGE THIS BACK
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
