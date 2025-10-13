@@ -7,7 +7,13 @@ import { verifyCredentialController } from "./controllers/verification.controlle
 const app: Express = express();
 const PORT = process.env.PORT || 8082;
 
-app.use(cors());
+const corsOptions = {
+  origin:
+    "http://afd8461e52bf646f899abd8269050061-1598209792.us-east-1.elb.amazonaws.com",
+  optionsSuccessStatus: 200,
+};
+app.options("*", cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // 2. Define the route directly in this file

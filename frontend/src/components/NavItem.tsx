@@ -1,32 +1,63 @@
-import { Icon, Link, Text, As } from "@chakra-ui/react";
+import { Flex, Icon, Link } from "@chakra-ui/react";
+import React from "react";
 
 interface NavItemProps {
-  icon: As; // Type for the icon component
-  isActive?: boolean;
-  onClick?: () => void;
+  icon: React.ElementType;
   children: React.ReactNode;
+  page: string;
+  activePage: string;
+  onClick: (page: string) => void;
 }
 
-const NavItem = ({ icon, isActive, onClick, children }: NavItemProps) => {
+const NavItem = ({
+  icon,
+  children,
+  page,
+  activePage,
+  onClick,
+}: NavItemProps) => {
+  const isActive = page === activePage;
+
   return (
     <Link
-      onClick={onClick}
-      display="flex"
-      alignItems="center"
-      p={3}
-      my={2}
-      borderRadius="lg"
-      role="group"
-      cursor="pointer"
-      userSelect="none"
-      bg={isActive ? "blue.500" : "transparent"} // Highlight if active
-      _hover={{
-        bg: "gray.700",
-      }}
+      href="#" // <-- Add this line to make it a valid link
+      onClick={() => onClick(page)}
       style={{ textDecoration: "none" }}
+      _focus={{ boxShadow: "none" }}
+      aria-current={isActive ? "page" : undefined}
     >
-      <Icon mr={4} fontSize="18" as={icon} />
-      <Text fontSize="md">{children}</Text>
+      <Flex
+        // ... (rest of the Flex component is the same)
+        data-testid="nav-item-container"
+        align="center"
+        p="4"
+        mx="4"
+        borderRadius="8px"
+        role="group"
+        cursor="pointer"
+        bg={isActive ? "blue.500" : "transparent"}
+        color={isActive ? "white" : "inherit"}
+        _hover={
+          !isActive
+            ? {
+                bg: "blue.400",
+                color: "white",
+              }
+            : {}
+        }
+      >
+        {icon && (
+          <Icon
+            mr="4"
+            fontSize="16"
+            _groupHover={{
+              color: "white",
+            }}
+            as={icon}
+          />
+        )}
+        {children}
+      </Flex>
     </Link>
   );
 };

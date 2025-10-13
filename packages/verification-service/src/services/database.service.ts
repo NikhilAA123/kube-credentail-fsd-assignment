@@ -3,8 +3,8 @@ import path from "path";
 
 // Use the DB_PATH from the environment, or default to the issuance service's local data folder
 const dataDir =
-  process.env.DB_PATH ||
-  path.resolve(__dirname, "../../../issuance-service/data");
+  process.env.DB_PATH || path.resolve(__dirname, "../../../../data");
+
 const dbPath = path.join(dataDir, "credentials.json");
 
 // Add a log to show which path is being used

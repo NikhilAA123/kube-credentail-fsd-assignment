@@ -1,76 +1,54 @@
 import { useState } from "react";
-import { Box, Flex, VStack, Heading, Text } from "@chakra-ui/react";
-import { AddIcon, CheckCircleIcon } from "@chakra-ui/icons";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { FilePlus, CheckCircle } from "lucide-react";
 import NavItem from "./components/NavItem";
-// 1. Import your new page components
-import IssuePage from "./components/IssuePage";
-import VerificationPage from "./components/VerificationPage";
-
-type Page = "issue" | "verify" | "home";
+import IssuanceForm from "./components/IssueCredentialForm";
+import VerificationForm from "./components/VerificationForm";
 
 function App() {
-  const [activePage, setActivePage] = useState<Page>("home");
+  const [activePage, setActivePage] = useState("issue");
 
-  const renderContent = () => {
-    switch (activePage) {
-      // 2. Render the actual components
-      case "issue":
-        return <IssuePage />;
-      case "verify":
-        return <VerificationPage />;
-      default:
-        return (
-          <>
-            <Heading>Welcome to Creds-Manager</Heading>
-            <Text mt={4}>Select an option from the sidebar to begin.</Text>
-          </>
-        );
-    }
+  const handlePageChange = (page: string) => {
+    setActivePage(page);
   };
 
   return (
-    <Flex h="100vh" w="100vw">
-      {/* --- Professional Sidebar --- */}
+    // Use responsive flexDirection: 'column' on base (mobile), 'row' on medium screens and up
+    <Flex direction={{ base: "column", md: "row" }}>
+      {/* Sidebar Navigation */}
       <Box
-        as="nav"
-        w="250px"
-        bg="gray.800"
-        color="white"
-        borderRight="1px"
-        borderColor="gray.700"
+        // Use responsive width: 100% on mobile, 300px on medium screens and up
+        w={{ base: "100%", md: "300px" }}
+        h={{ base: "auto", md: "100vh" }} // Responsive height
+        bg="gray.100"
+        p="4"
+        flexShrink={0} // Prevents the sidebar from shrinking
       >
-        <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-          <Heading
-            size="md"
-            as="h1"
-            cursor="pointer"
-            onClick={() => setActivePage("home")}
-          >
-            Creds-Manager
-          </Heading>
-        </Flex>
-
-        <VStack as="nav" align="stretch" px={4}>
-          <NavItem
-            icon={AddIcon}
-            isActive={activePage === "issue"}
-            onClick={() => setActivePage("issue")}
-          >
-            Issue Credential
-          </NavItem>
-          <NavItem
-            icon={CheckCircleIcon}
-            isActive={activePage === "verify"}
-            onClick={() => setActivePage("verify")}
-          >
-            Verify Credential
-          </NavItem>
-        </VStack>
+        <Text fontSize="2xl" fontWeight="bold" mb="8">
+          Kube Credential
+        </Text>
+        <NavItem
+          icon={FilePlus}
+          page="issue"
+          activePage={activePage}
+          onClick={handlePageChange}
+        >
+          Issue Credential
+        </NavItem>
+        <NavItem
+          icon={CheckCircle}
+          page="verify"
+          activePage={activePage}
+          onClick={handlePageChange}
+        >
+          Verify Credential
+        </NavItem>
       </Box>
 
-      {/* --- Main Content --- */}
-      <Box flex="1" p={10} bg="gray.50">
-        {renderContent()}
+      {/* Main Content Area */}
+      <Box flex="1" p={{ base: 4, md: 8 }}>
+        {activePage === "issue" && <IssuanceForm />}
+        {activePage === "verify" && <VerificationForm />}
       </Box>
     </Flex>
   );

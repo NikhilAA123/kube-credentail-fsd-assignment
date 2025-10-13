@@ -2,7 +2,9 @@ import fs from "fs/promises";
 import path from "path";
 
 // Use the DB_PATH from the environment, or default to a local 'data' folder
-const dataDir = process.env.DB_PATH || path.join(process.cwd(), "data");
+const dataDir =
+  process.env.DB_PATH || path.resolve(__dirname, "../../../../data");
+
 const dbPath = path.join(dataDir, "credentials.json");
 
 // Add a log to show which path is being used

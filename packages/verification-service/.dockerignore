@@ -1,0 +1,22 @@
+# Ignore dependencies - these are installed inside the container
+
+node_modules/
+
+# Ignore the entire tests folder
+
+tests/
+
+# Ignore test configuration
+
+jest.config.js
+
+# Ignore build output, local data, and environment files
+
+dist/
+data/
+.env
+
+# Ignore git and other local config
+
+.git
+.gitignore

@@ -6,7 +6,13 @@ const app = express();
 const PORT = process.env.PORT || 8081; // 2. Changed port to 8081 for consistency
 
 // 3. Add the cors middleware to allow requests from the frontend
-app.use(cors());
+const corsOptions = {
+  origin:
+    "http://afd8461e52bf646f899abd8269050061-1598209792.us-east-1.elb.amazonaws.com", // Your frontend URL
+  optionsSuccessStatus: 200, // For legacy browser support
+};
+app.options("*", cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/", issuanceRoutes);
 

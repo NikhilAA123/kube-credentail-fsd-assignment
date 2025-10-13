@@ -1,20 +1,19 @@
 import { useState } from "react";
+import axios from "axios";
 import {
   Box,
-  Heading,
+  Button,
   FormControl,
   FormLabel,
   Input,
   Textarea,
-  Button,
   VStack,
   useToast,
-  Code,
+  Text,
 } from "@chakra-ui/react";
-import { issueCredential } from "../services/api"; // Import our new function
-import axios from "axios";
+import { issueCredential } from "../services/api";
 
-const IssueCredentialForm = () => {
+const IssuanceForm = () => {
   const [userId, setUserId] = useState("");
   const [credentialType, setCredentialType] = useState("");
   const [claims, setClaims] = useState("");
@@ -22,56 +21,51 @@ const IssueCredentialForm = () => {
   const [signedCredential, setSignedCredential] = useState("");
   const toast = useToast();
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setIsLoading(true);
     setSignedCredential("");
 
-    let parsedClaims;
     try {
-      parsedClaims = JSON.parse(claims);
-    } catch (error) {
-      toast({
-        title: "Invalid JSON",
-        description: "The claims field does not contain valid JSON.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-      console.error("JSON Parse Error:", error);
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      // Use the refactored API function
-      const response = await issueCredential({
+      const claimsJson = JSON.parse(claims);
+      const data = await issueCredential({
         userId,
         credentialType,
-        claims: parsedClaims,
+        claims: claimsJson,
       });
 
-      setSignedCredential(response.signedCredential);
+      setSignedCredential(data.signedCredential);
       toast({
-        title: "Success!",
-        description: `Credential issued by ${response.workerId}`,
+        title: "Credential issued successfully!",
         status: "success",
         duration: 5000,
         isClosable: true,
       });
+
+      setUserId("");
+      setCredentialType("");
+      setClaims("");
     } catch (error) {
-      let errorMessage = "Something went wrong.";
-      if (axios.isAxiosError(error)) {
-        errorMessage = error.response?.data?.message || error.message;
+      // --- Start of Added Lines ---
+      let errorMessage = "An unknown error occurred.";
+
+      if (axios.isAxiosError(error) && error.response) {
+        // This checks for an API error and extracts the backend's message
+        errorMessage = error.response.data.error || error.message;
+      } else if (error instanceof Error) {
+        // This handles other types of errors (e.g., bad JSON)
+        errorMessage = error.message;
       }
+      // --- End of Added Lines ---
+
+      // The 'description' now uses the specific error message
       toast({
-        title: "API Error",
+        title: "Error issuing credential.",
         description: errorMessage,
         status: "error",
         duration: 5000,
         isClosable: true,
       });
-      console.error("API Error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -79,57 +73,62 @@ const IssueCredentialForm = () => {
 
   return (
     <Box>
-      <Heading mb={6}>Issue a New Credential</Heading>
-      <VStack as="form" spacing={4} align="stretch" onSubmit={handleSubmit}>
-        {/* ... Form inputs remain the same ... */}
-        <FormControl isRequired>
-          <FormLabel>User ID</FormLabel>
-          <Input
-            placeholder="e.g., user-12345"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-          />
-        </FormControl>
-        <FormControl isRequired>
-          <FormLabel>Credential Type</FormLabel>
-          <Input
-            placeholder="e.g., ProofOfAge"
-            value={credentialType}
-            onChange={(e) => setCredentialType(e.target.value)}
-          />
-        </FormControl>
-        <FormControl isRequired>
-          <FormLabel>Claims (JSON format)</FormLabel>
-          <Textarea
-            placeholder='{ "name": "John Doe", "age": 30 }'
-            rows={5}
-            value={claims}
-            onChange={(e) => setClaims(e.target.value)}
-          />
-        </FormControl>
-
-        <Button colorScheme="blue" type="submit" isLoading={isLoading}>
-          Issue Credential
-        </Button>
-      </VStack>
-
+      <form onSubmit={handleSubmit}>
+        <VStack spacing={4}>
+          <FormControl isRequired>
+            <FormLabel htmlFor="userId">User ID</FormLabel>
+            <Input
+              id="userId"
+              placeholder="e.g., user-12345"
+              value={userId}
+              onChange={(e) => setUserId(e.target.value)}
+            />
+          </FormControl>
+          <FormControl isRequired>
+            <FormLabel htmlFor="credentialType">Credential Type</FormLabel>
+            <Input
+              id="credentialType"
+              placeholder="e.g., ProofOfAge"
+              value={credentialType}
+              onChange={(e) => setCredentialType(e.target.value)}
+            />
+          </FormControl>
+          <FormControl isRequired>
+            <FormLabel htmlFor="claims">Claims (JSON format)</FormLabel>
+            <Textarea
+              id="claims"
+              placeholder='{ "name": "John Doe", "age": 30 }'
+              value={claims}
+              onChange={(e) => setClaims(e.target.value)}
+              rows={5}
+            />
+          </FormControl>
+          <Button
+            type="submit"
+            colorScheme="blue"
+            isLoading={isLoading}
+            width="full"
+          >
+            Issue Credential
+          </Button>
+        </VStack>
+      </form>
       {signedCredential && (
-        <Box mt={6}>
-          <Heading size="md" mb={2}>
-            Signed Credential (JWT)
-          </Heading>
-          <Code
-            p={4}
-            display="block"
-            whiteSpace="pre-wrap"
+        <Box mt={6} p={4} borderWidth="1px" borderRadius="md" bg="gray.50">
+          <Text fontWeight="bold" mb={2}>
+            Signed Credential (JWT):
+          </Text>
+          <Text
+            fontFamily="monospace"
             wordBreak="break-all"
+            whiteSpace="pre-wrap"
           >
             {signedCredential}
-          </Code>
+          </Text>
         </Box>
       )}
     </Box>
   );
 };
 
-export default IssueCredentialForm;
+export default IssuanceForm;
