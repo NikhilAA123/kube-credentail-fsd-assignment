@@ -42,7 +42,9 @@ Several key architectural and design decisions were made to ensure the applicati
 4. # Networking Strategy: LoadBalancer Service Type
    It is critical to note that the networking strategy for this project is not a standard production best practice.
 
-# Standard Approach: In a production environment, an Ingress Controller would be used to manage all incoming traffic through a single entry point (one Load Balancer). Backend services would be of type ClusterIP, making them inaccessible from the public internet for security.
+# Standard Approach:
+
+In a production environment, an Ingress Controller would be used to manage all incoming traffic through a single entry point (one Load Balancer). Backend services would be of type ClusterIP, making them inaccessible from the public internet for security.
 
 # Project Approach:
 
