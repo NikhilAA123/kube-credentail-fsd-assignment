@@ -10,6 +10,9 @@ The application is designed to run in two distinct environments: a local Docker 
 
 The system is composed of three main components: a frontend user interface, and two backend microservices. A persistent data layer is shared between the backend services to maintain the state of issued credentials.
 
+![alt text](<HLD.drawio (1).png>)
+![alt text](<Cloud design.drawio.png>)
+
 # Codebase Structure
 
 The project is a monorepo containing the frontend and two backend services. Kubernetes configuration files are stored in the k8s directory.
