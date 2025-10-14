@@ -24,6 +24,11 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Issuance service is running on http://localhost:${PORT}`);
+// app.listen(PORT, () => {
+// console.log(`Issuance service is running on http://localhost:${PORT}`);
+//});
+const HOST = "0.0.0.0"; // This is crucial for containerized environments
+
+app.listen(Number(PORT), HOST, () => {
+  console.log(`Issuance service is running on http://${HOST}:${PORT}`);
 });

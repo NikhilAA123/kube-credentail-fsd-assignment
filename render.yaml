@@ -1,0 +1,29 @@
+# render.yaml
+services:
+  # Issuance Service Definition
+  - type: web
+    name: issuance-service
+    runtime: docker # Corrected from 'env'
+    repo: https://github.com/NikhilAA123/kube-credentail-fsd-assignment.git # <-- IMPORTANT: Change this
+    rootDir: ./packages/issuance-service
+    envVars:
+      - key: DB_PATH
+        value: /var/data
+    disk: # Corrected from 'disks' (singular)
+      name: credential-data
+      mountPath: /var/data
+      sizeGB: 1
+
+  # Verification Service Definition
+  - type: web
+    name: verification-service
+    runtime: docker # Corrected from 'env'
+    repo: https://github.com/YOUR_USERNAME/YOUR_REPO_NAME # <-- IMPORTANT: Change this
+    rootDir: ./packages/verification-service
+    envVars:
+      - key: DB_PATH
+        value: /var/data
+    disk: # Corrected from 'disks' (singular)
+      name: credential-data
+      mountPath: /var/data
+      sizeGB: 1

@@ -28,6 +28,11 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ error: "Something went wrong!" });
 });
 
-app.listen(PORT, () => {
+/*app.listen(PORT, () => {
   console.log(`Verification service is running on http://localhost:${PORT}`);
+});*/
+const HOST = "0.0.0.0"; // This is crucial for containerized environments
+
+app.listen(Number(PORT), HOST, () => {
+  console.log(`Verification service is running on http://${HOST}:${PORT}`);
 });
