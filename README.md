@@ -88,7 +88,7 @@ The application has been successfully deployed to an EKS cluster.
 
 # Live Frontend URL:
 
-[text](http://a8220b3e9edd04a90a657e4f5680e242-1763668548.us-east-1.elb.amazonaws.com/)
+[Kube-Crential-frontend](http://a8220b3e9edd04a90a657e4f5680e242-1763668548.us-east-1.elb.amazonaws.com/)
 
 # Performance Considerations
 
