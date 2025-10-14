@@ -88,7 +88,7 @@ The application has been successfully deployed to an EKS cluster.
 
 # Live Frontend URL:
 
-http://afd8461e52bf646f899abd8269050061-1598209792.us-east-1.elb.amazonaws.com
+[text](http://a8220b3e9edd04a90a657e4f5680e242-1763668548.us-east-1.elb.amazonaws.com/)
 
 # Performance Considerations
 
