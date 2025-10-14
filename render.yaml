@@ -9,10 +9,6 @@ services:
     envVars:
       - key: DB_PATH
         value: /var/data
-    disk: # Corrected from 'disks' (singular)
-      name: credential-data
-      mountPath: /var/data
-      sizeGB: 1
 
   # Verification Service Definition
   - type: web
@@ -23,7 +19,3 @@ services:
     envVars:
       - key: DB_PATH
         value: /var/data
-    disk: # Corrected from 'disks' (singular)
-      name: credential-data
-      mountPath: /var/data
-      sizeGB: 1
