@@ -1,29 +1,15 @@
-# render.yaml
+# Exported from Render on 2025-10-14T11:20:26Z
+version: "1"
 services:
-  # Issuance Service Definition
   - type: web
-    name: issuance-service
-    runtime: docker # Corrected from 'env'
-    repo: https://github.com/NikhilAA123/kube-credentail-fsd-assignment.git # <-- IMPORTANT: Change this
-    rootDir: ./packages/issuance-service
+    name: kube-credentail-fsd-assignment
+    runtime: node
+    repo: https://github.com/NikhilAA123/kube-credentail-fsd-assignment
+    plan: free
     envVars:
-      - key: DB_PATH
-        value: /var/data
-    disk: # Corrected from 'disks' (singular)
-      name: credential-data
-      mountPath: /var/data
-      sizeGB: 1
-
-  # Verification Service Definition
-  - type: web
-    name: verification-service
-    runtime: docker # Corrected from 'env'
-    repo: https://github.com/YOUR_USERNAME/YOUR_REPO_NAME # <-- IMPORTANT: Change this
-    rootDir: ./packages/verification-service
-    envVars:
-      - key: DB_PATH
-        value: /var/data
-    disk: # Corrected from 'disks' (singular)
-      name: credential-data
-      mountPath: /var/data
-      sizeGB: 1
+      - key: Nikhl
+        sync: false
+    region: oregon
+    buildCommand: yarn
+    startCommand: yarn start
+    autoDeployTrigger: commit
