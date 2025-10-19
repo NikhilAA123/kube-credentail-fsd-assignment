@@ -5,9 +5,9 @@ metadata:
   name: verification-service
   namespace: kube-credential-ns
 spec:
+  type: ClusterIP # Change this back
   selector:
     app: verification-service
-  type: LoadBalancer # <-- ADD THIS LINE
   ports:
     - protocol: TCP
       port: 8082
