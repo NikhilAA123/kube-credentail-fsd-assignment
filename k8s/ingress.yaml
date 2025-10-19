@@ -8,16 +8,10 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    # Route requests to /issue to the issuance-service
-    alb.ingress.kubernetes.io/actions.issuance-service: >
-      {"type":"forward","targetGroupARN":"ARN_OF_ISSUANCE_TARGET_GROUP"}
-    # Route requests to /verify to the verification-service
-    alb.ingress.kubernetes.io/actions.verification-service: >
-      {"type":"forward","targetGroupARN":"ARN_OF_VERIFICATION_TARGET_GROUP"}
 spec:
+  ingressClassName: alb
   rules:
-    # We will replace this host with our sslip.io address later
-    - host: your-temporary-placeholder.com
+    - host: your-temporary-placeholder.com # Replace with your actual domain or sslip.io address
       http:
         paths:
           # Frontend is the default
