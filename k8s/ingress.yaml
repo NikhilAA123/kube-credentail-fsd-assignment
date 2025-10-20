@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: your-temporary-placeholder.com # Replace with your actual domain or sslip.io address
+    - host: app.54.211.186.45.sslip.io # Replace with your actual domain or sslip.io address
       http:
         paths:
           # Frontend is the default
