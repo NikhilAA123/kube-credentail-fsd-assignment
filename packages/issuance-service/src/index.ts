@@ -6,10 +6,9 @@ const app = express();
 const PORT = process.env.PORT || 8081;
 const HOST = "0.0.0.0";
 
-// --- This is the corrected, flexible CORS configuration ---
 const allowedOrigins = [
-  "https://kube-credentail-fsd-assignment.vercel.app", // Your live Vercel URL
-  "http://localhost:5173", // Your local development URL
+  "https://kube-credentail-fsd-assignment.vercel.app",
+  "http://localhost:5173",
 ];
 
 const corsOptions = {
@@ -17,24 +16,17 @@ const corsOptions = {
     origin: string | undefined,
     callback: (err: Error | null, allow?: boolean) => void
   ) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg =
-        "The CORS policy for this site does not allow access from the specified Origin.";
-      return callback(new Error(msg), false);
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
     }
-    return callback(null, true);
   },
   optionsSuccessStatus: 200,
 };
 
-// Handle OPTIONS requests for CORS preflight
-app.options("*", cors(corsOptions));
-
-// Enable CORS for all other requests
+// The 'cors' middleware, when used like this, handles pre-flight requests automatically.
 app.use(cors(corsOptions));
-// --- End of fix ---
 
 app.use(express.json());
 app.use("/", issuanceRoutes);
