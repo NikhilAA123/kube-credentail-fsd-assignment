@@ -40,7 +40,7 @@ app.use("/", verificationRoutes);
 // Centralized error handler to catch any unexpected errors.
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
-  res.status(500).json({ error: "Something went wrong!" });
+  res.status(500).json({ error: err.message });
 });
 
 // Final server listener, ready for cloud deployment.
