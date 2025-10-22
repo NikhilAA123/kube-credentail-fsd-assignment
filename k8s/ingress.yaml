@@ -1,35 +1,22 @@
-# k8s/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: credential-app-ingress
   namespace: kube-credential-ns
   annotations:
+    # cert-manager will issue the TLS certificate
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    # AWS Load Balancer Controller annotations
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
 spec:
   ingressClassName: alb
   rules:
-    - host: app.54.211.186.45.sslip.io # Replace with your actual domain or sslip.io address
+    - host: app.35.171.113.187.sslip.io
       http:
         paths:
-          # Frontend is the default
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: frontend-service
-                port:
-                  number: 80
-          # Backend paths
-          - path: /issue
-            pathType: Prefix
-            backend:
-              service:
-                name: issuance-service
-                port:
-                  number: 8081
+          # Verification service route
           - path: /verify
             pathType: Prefix
             backend:
@@ -37,3 +24,23 @@ spec:
                 name: verification-service
                 port:
                   number: 8082
+          # Issuance service route
+          - path: /issue
+            pathType: Prefix
+            backend:
+              service:
+                name: issuance-service
+                port:
+                  number: 8081
+          # Default route for the frontend
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 3000
+  tls:
+    - hosts:
+        - app.35.171.113.187.sslip.io
+      secretName: credential-app-tls
