@@ -1,11 +1,10 @@
-# k8s/verification-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: verification-service
   namespace: kube-credential-ns
 spec:
-  type: ClusterIP # Change this back
+  type: ClusterIP
   selector:
     app: verification-service
   ports:

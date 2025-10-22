@@ -1,11 +1,11 @@
-# k8s/issuance-deployment.yaml
+# k8s/issuance-service/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: issuance-service-deployment
   namespace: kube-credential-ns
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: issuance-service
@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: issuance-service
-          image: 885706662470.dkr.ecr.us-east-1.amazonaws.com/issuance-service:latest # <-- REPLACE THIS
+          image: 885706662470.dkr.ecr.us-east-1.amazonaws.com/issuance-service:latest
           ports:
             - containerPort: 8081

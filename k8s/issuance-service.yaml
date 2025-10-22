@@ -1,11 +1,11 @@
-# k8s/issuance-service.yaml
+# k8s/issuance-service/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: issuance-service
   namespace: kube-credential-ns
 spec:
-  type: ClusterIP # Change this back
+  type: ClusterIP
   selector:
     app: issuance-service
   ports:
