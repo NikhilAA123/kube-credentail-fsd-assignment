@@ -4,19 +4,24 @@ metadata:
   name: credential-app-ingress
   namespace: kube-credential-ns
   annotations:
-    # cert-manager will issue the TLS certificate
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    # AWS Load Balancer Controller annotations
-    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/target-type: instance
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: alb
   rules:
-    - host: app.35.171.113.187.sslip.io
+    - host: app.44.211.222.64.sslip.io # <-- use your node public IP here
       http:
         paths:
-          # Verification service route
+          # ACME challenge path
+          - path: /.well-known/acme-challenge/*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 80
+          # Verification service
           - path: /verify
             pathType: Prefix
             backend:
@@ -24,7 +29,7 @@ spec:
                 name: verification-service
                 port:
                   number: 8082
-          # Issuance service route
+          # Issuance service
           - path: /issue
             pathType: Prefix
             backend:
@@ -32,15 +37,15 @@ spec:
                 name: issuance-service
                 port:
                   number: 8081
-          # Default route for the frontend
+          # Default frontend
           - path: /
             pathType: Prefix
             backend:
               service:
                 name: frontend-service
                 port:
-                  number: 3000
+                  number: 80
   tls:
     - hosts:
-        - app.35.171.113.187.sslip.io
+        - app.44.211.222.64.sslip.io # <-- same public IP here
       secretName: credential-app-tls
