@@ -4,9 +4,8 @@ metadata:
   name: letsencrypt-prod
 spec:
   acme:
-    # Production Let's Encrypt endpoint
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: nikhilpantam79@gmail.com
+    email: nikhilpantam79@gmail.com # <-- replace with your email
     privateKeySecretRef:
       name: letsencrypt-prod-key
     solvers:
