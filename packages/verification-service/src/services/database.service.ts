@@ -1,12 +1,9 @@
 import fs from "fs/promises";
 import path from "path";
 
-// --- OLD local path ---
-// const dataDir = process.env.DB_PATH || path.resolve(__dirname, "../../../../data");
-
-// --- NEW Railway shared volume ---
-const dataDir = process.env.DB_PATH || "/var/data";
-
+// Use DB_PATH env variable (directory), default to local 'data' folder
+const dataDir =
+  process.env.DB_PATH || path.resolve(__dirname, "../../../../data");
 const dbPath = path.join(dataDir, "credentials.json");
 
 // Add a log to show which path is being used
