@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: issuance-service-deployment
+  namespace: kube-credential-ns
+  labels:
+    app: issuance-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: issuance-service
+  template:
+    metadata:
+      labels:
+        app: issuance-service
+    spec:
+      containers:
+        - name: issuance-service
+          image: 885706662470.dkr.ecr.us-east-1.amazonaws.com/issuance-service:latest
+          ports:
+            - containerPort: 8081
+              name: http
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
