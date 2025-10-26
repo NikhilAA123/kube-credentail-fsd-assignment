@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: verification-service-deployment
+  namespace: kube-credential-ns
+  labels:
+    app: verification-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: verification-service
+  template:
+    metadata:
+      labels:
+        app: verification-service
+    spec:
+      containers:
+        - name: verification-service
+          image: 885706662470.dkr.ecr.us-east-1.amazonaws.com/verification-service:latest
+          ports:
+            - containerPort: 8082
+              name: http
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
