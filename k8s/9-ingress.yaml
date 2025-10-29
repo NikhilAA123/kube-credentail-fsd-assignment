@@ -4,24 +4,16 @@ metadata:
   name: credential-app-ingress
   namespace: kube-credential-ns
   annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/ssl-redirect: "443"
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/healthcheck-path: /
-    alb.ingress.kubernetes.io/load-balancer-name: credential-app-alb
-    alb.ingress.kubernetes.io/group.name: credential-app
-    # CRITICAL: Lower priority than challenge solver (which is 1)
-    alb.ingress.kubernetes.io/group.order: "10"
     cert-manager.io/cluster-issuer: letsencrypt-staging
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
-  ingressClassName: alb
+  ingressClassName: nginx
   tls:
     - hosts:
-        - app.34.232.144.161.nip.io
+        - app.44.220.16.109.nip.io
       secretName: credential-app-tls
   rules:
-    - host: app.34.232.144.161.nip.io
+    - host: app.44.220.16.109.nip.io
       http:
         paths:
           - path: /verify
