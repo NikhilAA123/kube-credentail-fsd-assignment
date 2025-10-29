@@ -3,14 +3,10 @@ kind: Service
 metadata:
   name: verification-service
   namespace: kube-credential-ns
-  labels:
-    app: verification-service
 spec:
   type: ClusterIP
   selector:
     app: verification-service
   ports:
-    - name: http
-      port: 8082
+    - port: 8082
       targetPort: 8082
-      protocol: TCP
