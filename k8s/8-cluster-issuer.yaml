@@ -11,14 +11,4 @@ spec:
     solvers:
       - http01:
           ingress:
-            class: alb
-            ingressTemplate:
-              metadata:
-                annotations:
-                  alb.ingress.kubernetes.io/scheme: internet-facing
-                  alb.ingress.kubernetes.io/target-type: ip
-                  alb.ingress.kubernetes.io/ssl-redirect: "false"
-                  # CRITICAL: Use same group name as main ingress
-                  alb.ingress.kubernetes.io/group.name: credential-app
-                  # CRITICAL: Give challenge solver higher priority
-                  alb.ingress.kubernetes.io/group.order: "1"
+            class: nginx
