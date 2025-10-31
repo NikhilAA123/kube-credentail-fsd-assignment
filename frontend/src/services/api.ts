@@ -1,23 +1,19 @@
 import axios from "axios";
 
-// --- Final API Configuration ---
-// All traffic now goes to the single Ingress URL.
-// The Ingress will route /issue and /verify to the correct backend service.
+// --- Unified API Configuration ---
+// The base URL comes from the .env file (VITE_API_BASE_URL)
+// Example in .env: VITE_API_BASE_URL=https://app.44.220.16.109.nip.io
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
-const API_BASE_URL = "http://app.54.211.186.45.sslip.io"; // <-- UPDATE THIS with your sslip.io URL
-
-// --- Axios API Clients ---
-// Both clients now point to the same base URL
-const issueApiClient = axios.create({
+// --- Axios Client ---
+const apiClient = axios.create({
   baseURL: API_BASE_URL,
 });
 
-const verifyApiClient = axios.create({
-  baseURL: API_BASE_URL,
-});
+// --- Types and Functions ---
 
-// --- Types and Functions (No changes needed below) ---
-
+// ---------- Issuance ----------
 interface IssuePayload {
   userId: string;
   credentialType: string;
@@ -33,10 +29,11 @@ interface IssueResponse {
 export const issueCredential = async (
   payload: IssuePayload
 ): Promise<IssueResponse> => {
-  const response = await issueApiClient.post("/issue", payload);
+  const response = await apiClient.post("/issue", payload);
   return response.data;
 };
 
+// ---------- Verification ----------
 interface VerifyPayload {
   signedCredential: string;
 }
@@ -53,6 +50,6 @@ interface VerifyResponse {
 export const verifyCredential = async (
   payload: VerifyPayload
 ): Promise<VerifyResponse> => {
-  const response = await verifyApiClient.post("/verify", payload);
+  const response = await apiClient.post("/verify", payload);
   return response.data;
 };

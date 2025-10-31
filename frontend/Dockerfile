@@ -1,36 +1,32 @@
 # --- Stage 1: Build the React Application ---
-# Use the official Node.js v22 image to match your local environment.
 FROM node:22-alpine AS build
 
-# Set the working directory inside the container.
 WORKDIR /app
 
-# Copy package.json files first for layer caching.
+# Copy dependency files first
 COPY package*.json ./
-
-# Install project dependencies.
 RUN npm install
 
-# Copy the rest of the application source code.
+# Copy all project files including .env (make sure it's not in .dockerignore)
 COPY . .
 
-# Build the application for production.
+# ✅ Ensure .env is explicitly copied (important!)
+COPY .env .env
+
+# Build the production build
 RUN npm run build
 
 # --- Stage 2: Serve the Static Files ---
-# Start a new, clean image for the production server.
 FROM node:22-alpine
 
 WORKDIR /app
 
-# Install the 'serve' static file server globally.
+# Install 'serve' globally to serve static files
 RUN npm install -g serve
 
-# Copy ONLY the built static files from the 'build' stage.
+# Copy built app from previous stage
 COPY --from=build /app/dist .
 
-# Expose the default port for the 'serve' package.
 EXPOSE 3000
 
-# The command to start the web server.
 CMD ["serve", "-s", "."]

@@ -13,7 +13,7 @@ import {
   AlertTitle,
   AlertDescription,
 } from "@chakra-ui/react";
-import { verifyCredential } from "../services/api2";
+import { verifyCredential } from "../services/api";
 import axios from "axios";
 
 // Define a type for our result state

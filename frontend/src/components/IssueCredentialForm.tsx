@@ -11,7 +11,7 @@ import {
   useToast,
   Text,
 } from "@chakra-ui/react";
-import { issueCredential } from "../services/api2";
+import { issueCredential } from "../services/api";
 
 const IssuanceForm = () => {
   const [userId, setUserId] = useState("");

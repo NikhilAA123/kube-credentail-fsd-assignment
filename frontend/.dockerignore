@@ -12,7 +12,6 @@ src/setupTests.ts
 # Ignore build output and environment files
 
 dist/
-.env
 
 # Ignore git and other local config
 
