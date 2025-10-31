@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shared-data-pvc
+  namespace: kube-credential-ns
+spec:
+  accessModes:
+    - ReadWriteMany # match with PV
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: manual
+  volumeName: efs-pv # explicitly bind to the PV

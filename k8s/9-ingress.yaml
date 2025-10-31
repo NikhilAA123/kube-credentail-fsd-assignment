@@ -4,7 +4,9 @@ metadata:
   name: credential-app-ingress
   namespace: kube-credential-ns
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-staging
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    acme.cert-manager.io/http01-edit-in-place: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
@@ -24,6 +26,13 @@ spec:
                 port:
                   number: 8082
           - path: /issue
+            pathType: Prefix
+            backend:
+              service:
+                name: issuance-service
+                port:
+                  number: 8081
+          - path: /credentials
             pathType: Prefix
             backend:
               service:
