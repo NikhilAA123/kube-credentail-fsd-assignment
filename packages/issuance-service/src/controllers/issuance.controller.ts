@@ -14,15 +14,17 @@ export const issueCredential = async (
   try {
     const { userId, credentialType, claims } = req.body;
 
+    // --- Validation ---
     if (!userId || !credentialType || !claims) {
       return res
         .status(400)
         .json({ error: "userId, credentialType, and claims are required." });
     }
 
+    // --- Read DB ---
     const db = await readDatabase();
 
-    // 🔧 Improved duplicate detection to match test mock structure
+    // --- Prevent duplicate issuance ---
     const isDuplicate = db.some((record: any) => {
       const cred = record.credential;
       return (
@@ -37,8 +39,10 @@ export const issueCredential = async (
         .status(409)
         .json({ error: "This credential has already been issued." });
     }
+
     const workerId = process.env.HOSTNAME || "local-dev-worker";
 
+    // --- Create new credential ---
     const newCredential = {
       "@context": [
         "https://www.w3.org/2018/credentials/v1",
@@ -52,12 +56,12 @@ export const issueCredential = async (
         id: `did:example:ebfeb1f712ebc6f1c276e12ec21`,
         ...claims,
       },
-      // We keep these fields for easier duplicate checking
       userId,
       credentialType,
       claims,
     };
 
+    // --- Save to DB ---
     const newRecord = {
       credential: newCredential,
       issuedBy: workerId,
@@ -71,6 +75,7 @@ export const issueCredential = async (
     db.push(newRecord);
     await writeDatabase(db);
 
+    // --- Response ---
     return res.status(201).json({
       message: `Credential issued by ${workerId}`,
       signedCredential,
