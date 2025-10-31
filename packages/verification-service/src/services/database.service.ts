@@ -2,10 +2,8 @@ import fs from "fs/promises";
 import path from "path";
 
 // Use DB_PATH env variable (directory), default to local 'data' folder
-const dataDir =
-  process.env.DB_PATH || path.resolve(__dirname, "../../../../data");
+const dataDir = process.env.DB_PATH || "/usr/src/app/shared";
 const dbPath = path.join(dataDir, "credentials.json");
-
 // Add a log to show which path is being used
 console.log(`[DB] Attempting to read database from: ${dbPath}`);
 

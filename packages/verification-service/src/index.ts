@@ -9,8 +9,9 @@ const HOST = "0.0.0.0"; // Listen on all network interfaces, crucial for Docker/
 // --- Professional CORS Configuration ---
 // This setup allows requests from your live Vercel URL and your local development server.
 const allowedOrigins = [
-  "https://kube-credentail-fsd-assignment.vercel.app", // Your live Vercel URL
-  "http://localhost:5173", // Your local development URL
+  "https://kube-credentail-fsd-assignment.vercel.app",
+  "http://localhost:5173",
+  "https://app.44.220.16.109.nip.io", // <-- Add your nip.io frontend URL here
 ];
 
 const corsOptions = {
@@ -36,6 +37,9 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use("/", verificationRoutes);
+app.get("/health", (req: Request, res: Response) => {
+  res.status(200).send("OK");
+});
 
 // Centralized error handler to catch any unexpected errors.
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
