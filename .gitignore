@@ -23,4 +23,5 @@ lerna-debug.log*
 
 # OS-specific files
 .DS_Store
-Thumbs.dbnode_modules/
+Thumbs.db
+node_modules/
