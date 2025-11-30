@@ -18,27 +18,27 @@ spec:
     - host: app.44.220.16.109.nip.io
       http:
         paths:
-          - path: /verify
+          - path: /auth
             pathType: Prefix
             backend:
               service:
-                name: verification-service
+                name: api-gateway
                 port:
-                  number: 8082
-          - path: /issue
+                  number: 3000
+          - path: /issuance
             pathType: Prefix
             backend:
               service:
-                name: issuance-service
+                name: api-gateway
                 port:
-                  number: 8081
-          - path: /credentials
+                  number: 3000
+          - path: /verification
             pathType: Prefix
             backend:
               service:
-                name: issuance-service
+                name: api-gateway
                 port:
-                  number: 8081
+                  number: 3000
           - path: /
             pathType: Prefix
             backend:

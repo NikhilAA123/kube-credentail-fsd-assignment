@@ -5,5 +5,33 @@
     "email": "test1763748021307@example.com",
     "passwordHash": "$2a$10$kGcDAI9crPcZIS0ltn.1QO1/nfOhfo43fXgIo1/c8ukRiNrkvUeD6",
     "createdAt": "2025-11-21T18:00:21.778Z"
+  },
+  {
+    "id": "0309eb21-273e-4b2f-8e1a-fdd47a289c80",
+    "name": "dine inn Restaurant",
+    "email": "nikhilpantam79@gmail.com",
+    "passwordHash": "$2a$10$Hc3RrWkB8SBuGFgvuNDzjOSR/D.GNb9klsWYET55Jxbu0xLgXABX6",
+    "createdAt": "2025-11-28T15:04:46.710Z"
+  },
+  {
+    "id": "40d46cc8-48c5-4c34-b948-7f2eda0a4553",
+    "name": "sree199",
+    "email": "nikhil123@gmail.com",
+    "passwordHash": "$2a$10$okDpXiK6drikbweExlmOq.zxhEtWXTy5CYpAjxI/d0e9Wk8.Dmpg2",
+    "createdAt": "2025-11-29T16:24:38.045Z"
+  },
+  {
+    "id": "56d325fa-8e13-4835-8b0d-7c2a8afc86ed",
+    "name": "swapnaThakur",
+    "email": "swapna123@gmail.com",
+    "passwordHash": "$2a$10$nUz7O9Y.rTwKdDIL8USpfO/LN3Uyt5caLSiqblW/zldlyTQQMnsli",
+    "createdAt": "2025-11-29T19:07:58.497Z"
+  },
+  {
+    "id": "8fdab442-7d55-4ac5-988a-ca21f9c31537",
+    "name": "raja",
+    "email": "df@gmi.cde",
+    "passwordHash": "$2a$10$9TUHqGchYhmrGmNBLUdXsujmvufYbV6krtO4Cw3yPmndz9TuV9QFa",
+    "createdAt": "2025-11-30T13:22:33.995Z"
   }
 ]

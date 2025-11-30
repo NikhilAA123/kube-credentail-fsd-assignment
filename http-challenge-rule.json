@@ -1,0 +1,16 @@
+{
+  "ListenerArn": "arn:aws:elasticloadbalancing:us-east-1:885706662470:listener/app/k8s-kubecred-credenti-0d264bd2dc/486d64546493472b/10238f78705eb6a7",
+  "Conditions": [
+    {
+      "Field": "path-pattern",
+      "Values": ["/.well-known/acme-challenge/*"]
+    }
+  ],
+  "Actions": [
+    {
+      "Type": "forward",
+      "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:885706662470:targetgroup/k8s-kubecred-cmacmeht-1955ee59cc/729963199352b8f9"
+    }
+  ],
+  "Priority": 1
+}
