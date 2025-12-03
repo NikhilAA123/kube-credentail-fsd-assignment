@@ -12,10 +12,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - app.44.220.16.109.nip.io
+        - app.52.71.51.203.nip.io
       secretName: credential-app-tls
   rules:
-    - host: app.44.220.16.109.nip.io
+    - host: app.52.71.51.203.nip.io
       http:
         paths:
           - path: /auth
