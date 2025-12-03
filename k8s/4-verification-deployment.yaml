@@ -32,4 +32,4 @@ spec:
       volumes:
         - name: shared-storage
           persistentVolumeClaim:
-            claimName: shared-data-pvc
+            claimName: shared-data-pvc-new
