@@ -11,7 +11,7 @@ const HOST = "0.0.0.0"; // Listen on all network interfaces, crucial for Docker/
 const allowedOrigins = [
   "https://kube-credentail-fsd-assignment.vercel.app",
   "http://localhost:5173",
-  "https://app.44.220.16.109.nip.io", // <-- Add your nip.io frontend URL here
+  "https://app.52.71.51.203.nip.io", // <-- Add your nip.io frontend URL here
 ];
 
 const corsOptions = {
