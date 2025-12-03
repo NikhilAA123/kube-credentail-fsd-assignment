@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: efs-pv-new
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual-efs
+  csi:
+    driver: efs.csi.aws.com
+    # 👇 put your *correct* EFS FS ID + Access Point ID here
+    volumeHandle: fs-04029ef6534da55d6::fsap-0d6e7bdc5a4eae769
