@@ -43,4 +43,4 @@ spec:
       volumes:
         - name: auth-data
           persistentVolumeClaim:
-            claimName: shared-data-pvc
+            claimName: shared-data-pvc-new
