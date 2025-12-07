@@ -1,35 +1,75 @@
+# API version for Deployment resource
+# apps/v1 is the stable version for managing Deployments
 apiVersion: apps/v1
+
+# Kind specifies the Kubernetes object type
+# Deployment ensures desired number of pod replicas are running
 kind: Deployment
+
 metadata:
+  # Name of the Deployment
   name: verification-service-deployment
+
+  # Namespace where the Deployment is created
   namespace: kube-credential-ns
+
 spec:
+  # Number of pod replicas to run
   replicas: 1
+
+  # Selector identifies which Pods are managed by this Deployment
   selector:
     matchLabels:
+      # Pods with this label belong to this Deployment
       app: verification-service
+
+  # Pod template definition
   template:
     metadata:
+      # Labels applied to the Pod
+      # Must match the selector labels
       labels:
         app: verification-service
+
     spec:
+      # Containers running inside the Pod
       containers:
         - name: verification-service
+          # Docker image stored in AWS ECR
           image: 885706662470.dkr.ecr.us-east-1.amazonaws.com/verification-service:latest
+
+          # Always pull the image when Pod is created or restarted
           imagePullPolicy: Always
+
+          # Resource requests and limits for the container
           resources:
             requests:
+              # Minimum memory guaranteed for the container
               memory: "64Mi"
+
+              # Minimum CPU guaranteed (0.25 core)
               cpu: "250m"
             limits:
+              # Maximum memory the container can consume
               memory: "128Mi"
+
+              # Maximum CPU usage allowed (0.5 core)
               cpu: "500m"
+
           ports:
+            # Port on which verification service listens
             - containerPort: 8082
+
           volumeMounts:
+            # Mount the shared volume inside the container
             - name: shared-storage
+              # Path inside the container where volume is mounted
               mountPath: /usr/src/app/shared
+
       volumes:
+        # Definition of volumes available to the Pod
         - name: shared-storage
           persistentVolumeClaim:
+            # PVC used for persistent and shared storage
+            # Allows data to survive pod restarts
             claimName: shared-data-pvc-new
