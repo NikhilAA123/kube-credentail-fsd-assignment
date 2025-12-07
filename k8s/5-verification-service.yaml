@@ -1,12 +1,33 @@
+# API version for Service resource
+# v1 is used for core Kubernetes objects like Service
 apiVersion: v1
+
+# Kind defines the Kubernetes object type
+# Service provides a stable network endpoint to access Pods
 kind: Service
+
 metadata:
+  # Name of the Service
+  # Other services will use this DNS name to communicate
   name: verification-service
+
+  # Namespace where the Service is created
   namespace: kube-credential-ns
+
 spec:
+  # Type of Service
+  # ClusterIP exposes the service only within the cluster
   type: ClusterIP
+
+  # Selector connects this Service to backend Pods
+  # Traffic is routed to Pods with label app=verification-service
   selector:
     app: verification-service
+
   ports:
+    # Ports exposed by the Service
     - port: 8082
+      # Port on which the Service is accessible inside the cluster
+
       targetPort: 8082
+      # Port on which the verification container is listening
