@@ -1,28 +1,64 @@
+# API version for Deployment resource
+# apps/v1 is the stable and recommended version
 apiVersion: apps/v1
+
+# Kind defines the type of Kubernetes object
+# Deployment manages ReplicaSets and Pods automatically
 kind: Deployment
+
 metadata:
+  # Name of the Deployment (must be unique in the namespace)
   name: frontend-deployment
+
+  # Namespace where this Deployment will be created
   namespace: kube-credential-ns
+
 spec:
+  # Number of pod replicas to run
+  # 1 means only one frontend pod will be running
   replicas: 1
+
+  # Selector tells the Deployment which Pods it owns
   selector:
     matchLabels:
+      # Pods with this label will be managed by this Deployment
       app: frontend
+
+  # Template describes the Pods that will be created
   template:
     metadata:
+      # Labels applied to the Pod
+      # Must match selector.matchLabels
       labels:
         app: frontend
+
     spec:
       containers:
+        # List of containers inside the Pod
         - name: frontend
+          # Docker image pulled from AWS ECR
           image: 885706662470.dkr.ecr.us-east-1.amazonaws.com/frontend:latest
+
+          # Always pull the image when creating/updating the pod
+          # Useful when using the 'latest' tag
           imagePullPolicy: Always
+
+          # Resource management for the container
           resources:
             requests:
+              # Minimum memory guaranteed for this container
               memory: "64Mi"
+
+              # Minimum CPU guaranteed (0.25 core)
               cpu: "250m"
             limits:
+              # Maximum memory the container can use
               memory: "128Mi"
+
+              # Maximum CPU the container can use (0.5 core)
               cpu: "500m"
+
           ports:
+            # Port exposed by the container
+            # Used by Service to route traffic
             - containerPort: 3000
