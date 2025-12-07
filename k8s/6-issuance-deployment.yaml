@@ -1,35 +1,75 @@
+# API version for Deployment resource
+# apps/v1 is the stable version used for Deployments
 apiVersion: apps/v1
+
+# Kind defines the Kubernetes object type
+# Deployment ensures the specified number of pod replicas stay running
 kind: Deployment
+
 metadata:
+  # Name of the Deployment
   name: issuance-service-deployment
+
+  # Namespace where this Deployment will be created
   namespace: kube-credential-ns
+
 spec:
+  # Number of Pod replicas
   replicas: 1
+
+  # Selector defines which Pods are managed by this Deployment
   selector:
     matchLabels:
+      # Pods with this label belong to this Deployment
       app: issuance-service
+
+  # Template that defines how the Pods should be created
   template:
     metadata:
+      # Labels applied to the Pod
+      # Must match the selector labels above
       labels:
         app: issuance-service
+
     spec:
+      # List of containers to run inside each Pod
       containers:
         - name: issuance-service
+          # Docker image stored in AWS ECR
           image: 885706662470.dkr.ecr.us-east-1.amazonaws.com/issuance-service:latest
+
+          # Always pull image during Pod creation/update
           imagePullPolicy: Always
+
+          # CPU and memory configuration for this container
           resources:
             requests:
+              # Minimum memory allocated to this container
               memory: "64Mi"
+
+              # Minimum CPU guaranteed (0.25 vCPU)
               cpu: "250m"
             limits:
+              # Maximum memory the container can use
               memory: "128Mi"
+
+              # Maximum CPU it can consume (0.5 vCPU)
               cpu: "500m"
+
           ports:
+            # Port the issuance service listens on
             - containerPort: 8081
+
           volumeMounts:
+            # Mount the persistent volume into the container
             - name: shared-storage
+              # Path inside the container where data will be accessible
               mountPath: /usr/src/app/shared
+
       volumes:
+        # Define volumes available to the Pod
         - name: shared-storage
           persistentVolumeClaim:
+            # Bind this volume to an existing PVC
+            # Allows persistent and shared data across pod restarts
             claimName: shared-data-pvc-new
