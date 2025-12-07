@@ -1,12 +1,33 @@
+# API version for Service resource
+# v1 is the stable version for core Kubernetes objects
 apiVersion: v1
+
+# Kind defines the Kubernetes object type
+# Service is used to expose Pods internally or externally
 kind: Service
+
 metadata:
+  # Name of the Service
+  # Used by other pods to access the frontend
   name: frontend-service
+
+  # Namespace where the Service is created
   namespace: kube-credential-ns
+
 spec:
+  # Type of Service
+  # ClusterIP exposes the service only within the Kubernetes cluster
   type: ClusterIP
+
+  # Selector maps this Service to Pods
+  # It will route traffic to Pods with label app=frontend
   selector:
     app: frontend
+
   ports:
+    # List of ports exposed by the Service
     - port: 80
+      # Service port accessed by other Pods inside the cluster
+
       targetPort: 3000
+      # Container port where the frontend application is running
