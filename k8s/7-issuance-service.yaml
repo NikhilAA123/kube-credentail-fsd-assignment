@@ -1,12 +1,33 @@
+# API version for Service resource
+# v1 is used for core Kubernetes objects like Service
 apiVersion: v1
+
+# Kind specifies the Kubernetes object type
+# Service exposes a set of Pods via a stable network identity
 kind: Service
+
 metadata:
+  # Name of the Service
+  # Used as DNS name by other services to reach issuance-service
   name: issuance-service
+
+  # Namespace where the Service is created
   namespace: kube-credential-ns
+
 spec:
+  # Service type
+  # ClusterIP exposes the service only inside the Kubernetes cluster
   type: ClusterIP
+
+  # Selector maps the Service to backend Pods
+  # Traffic is routed to Pods with label app=issuance-service
   selector:
     app: issuance-service
+
   ports:
+    # Port configuration for the Service
     - port: 8081
+      # Port exposed by the Service within the cluster
+
       targetPort: 8081
+      # Port on which the containerized issuance service is listening
