@@ -1,46 +1,97 @@
+# API version for Deployment resource
+# apps/v1 is the stable and recommended version for Deployments
 apiVersion: apps/v1
+
+# Kind defines the Kubernetes object type
+# Deployment ensures the desired number of auth-service pods are running
 kind: Deployment
+
 metadata:
+  # Name of the Deployment
   name: auth-service
+
+  # Namespace where this Deployment will be created
   namespace: kube-credential-ns
+
 spec:
+  # Number of pod replicas to run
   replicas: 1
+
+  # Selector defines which Pods are managed by this Deployment
   selector:
     matchLabels:
+      # Pods with this label belong to this Deployment
       app: auth-service
+
+  # Pod template that defines how the Pods are created
   template:
     metadata:
+      # Labels applied to the Pod
+      # Must match the selector labels above
       labels:
         app: auth-service
+
     spec:
+      # List of containers inside the Pod
       containers:
         - name: auth-service
+          # Docker image stored in AWS ECR
           image: 885706662470.dkr.ecr.us-east-1.amazonaws.com/auth-service:latest
+
+          # Always pull the image when the Pod starts
           imagePullPolicy: Always
+
+          # CPU and memory resource management
           resources:
             requests:
+              # Minimum memory guaranteed for this container
               memory: "64Mi"
+
+              # Minimum CPU guaranteed (0.25 core)
               cpu: "250m"
             limits:
+              # Maximum memory the container can use
               memory: "128Mi"
+
+              # Maximum CPU allowed (0.5 core)
               cpu: "500m"
+
           ports:
+            # Port on which the authentication service listens
             - containerPort: 4000
+
           volumeMounts:
+            # Mount persistent storage into the container
             - name: auth-data
+              # Path inside the container to store auth-related data
               mountPath: /app/data
+
           env:
+            # Port on which the application runs
             - name: PORT
               value: "4000"
+
+            # Secret key used for signing JWT tokens
+            # (Should be moved to a Kubernetes Secret in production)
             - name: JWT_SECRET
               value: "supersecretchangeme"
+
+            # JWT token expiration duration
             - name: TOKEN_EXPIRES_IN
               value: "1h"
+
+            # Number of salt rounds used for password hashing
             - name: SALT_ROUNDS
               value: "10"
+
+            # CORS configuration for allowed origins
             - name: CORS_ORIGIN
               value: "*"
+
       volumes:
+        # Volumes available to the Pod
         - name: auth-data
           persistentVolumeClaim:
+            # PVC providing persistent storage
+            # Data remains even if the pod restarts
             claimName: shared-data-pvc-new
