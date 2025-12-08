@@ -1,15 +1,35 @@
+# API version for cert-manager resources
+# cert-manager.io/v1 is the stable version
 apiVersion: cert-manager.io/v1
+
+# Kind defines the cert-manager resource type
+# ClusterIssuer issues TLS certificates cluster-wide
 kind: ClusterIssuer
+
 metadata:
+  # Name of the ClusterIssuer
+  # Referenced by Ingress resources for TLS certificates
   name: letsencrypt-production
+
 spec:
   acme:
-    # production ACME endpoint
+    # ACME server URL
+    # Production Let's Encrypt endpoint (real, trusted certificates)
     server: https://acme-v02.api.letsencrypt.org/directory
+
+    # Email used by Let's Encrypt for important notifications
+    # (expiry notices, security updates, etc.)
     email: nikhilpantam79@gmail.com
+
     privateKeySecretRef:
+      # Kubernetes Secret where ACME account private key is stored
+      # Created and managed automatically by cert-manager
       name: letsencrypt-production-key
+
     solvers:
+      # Solver defines how ACME domain ownership will be verified
       - http01:
           ingress:
+            # Ingress class used to solve the HTTP-01 challenge
+            # Traffic must be routed through this Ingress controller
             class: nginx
