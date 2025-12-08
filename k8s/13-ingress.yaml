@@ -1,30 +1,63 @@
+# API version for Ingress resource
+# networking.k8s.io/v1 is the stable Ingress API
 apiVersion: networking.k8s.io/v1
+
+# Kind defines the Kubernetes resource type
+# Ingress manages external HTTP/HTTPS access to services
 kind: Ingress
+
 metadata:
+  # Name of the Ingress resource
   name: credential-app-ingress
+
+  # Namespace where the Ingress is created
   namespace: kube-credential-ns
+
   annotations:
+    # Specify the Ingress controller to use
+    # NGINX Ingress will handle routing rules
     kubernetes.io/ingress.class: nginx
+
+    # Tell cert-manager which ClusterIssuer to use
+    # This enables automatic TLS certificate issuance
     cert-manager.io/cluster-issuer: letsencrypt-production
+
+    # Allows cert-manager to edit ingress during HTTP-01 challenge
     acme.cert-manager.io/http01-edit-in-place: "true"
+
+    # Force HTTP traffic to redirect to HTTPS
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
 spec:
+  # Explicitly specify the Ingress class
   ingressClassName: nginx
+
   tls:
+    # TLS configuration for HTTPS
     - hosts:
+        # Domain name for which the TLS certificate is issued
         - app.52.71.51.203.nip.io
+
+      # Secret where the TLS certificate will be stored
+      # Automatically created by cert-manager
       secretName: credential-app-tls
+
   rules:
+    # Routing rules based on host and path
     - host: app.52.71.51.203.nip.io
       http:
         paths:
+          # Route authentication-related requests to API Gateway
           - path: /auth
             pathType: Prefix
             backend:
               service:
+                # API Gateway Service handles auth routes
                 name: api-gateway
                 port:
                   number: 3000
+
+          # Route issuance-related requests to API Gateway
           - path: /issuance
             pathType: Prefix
             backend:
@@ -32,6 +65,8 @@ spec:
                 name: api-gateway
                 port:
                   number: 3000
+
+          # Route verification-related requests to API Gateway
           - path: /verification
             pathType: Prefix
             backend:
@@ -39,10 +74,13 @@ spec:
                 name: api-gateway
                 port:
                   number: 3000
+
+          # Default route for frontend application
           - path: /
             pathType: Prefix
             backend:
               service:
+                # Frontend Service serves the UI
                 name: frontend-service
                 port:
                   number: 80
