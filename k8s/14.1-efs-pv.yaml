@@ -1,16 +1,45 @@
+# API version for PersistentVolume resource
+# v1 is used for core Kubernetes storage objects
 apiVersion: v1
+
+# Kind defines the Kubernetes resource type
+# PersistentVolume represents cluster-wide storage
 kind: PersistentVolume
+
 metadata:
+  # Name of the PersistentVolume
+  # This name is referenced by PersistentVolumeClaims
   name: efs-pv-new
+
 spec:
+  # Total storage capacity available in this volume
+  # Note: For EFS, this value is logical (not strictly enforced)
   capacity:
     storage: 5Gi
+
+  # Volume mode defines how the volume is accessed by Pods
+  # Filesystem means the volume will be mounted as a directory
   volumeMode: Filesystem
+
+  # Access mode for the volume
+  # ReadWriteMany allows multiple Pods to read/write simultaneously
   accessModes:
     - ReadWriteMany
+
+  # What happens to the volume when the PVC is deleted
+  # Retain keeps the data intact for manual cleanup
   persistentVolumeReclaimPolicy: Retain
+
+  # StorageClass name used to bind PVCs to this PV
+  # Must match the storageClassName in the PVC
   storageClassName: manual-efs
+
+  # CSI (Container Storage Interface) configuration
   csi:
+    # AWS EFS CSI driver
     driver: efs.csi.aws.com
-    # 👇 put your *correct* EFS FS ID + Access Point ID here
+
+    # Unique volume identifier
+    # Format: <EFS FileSystem ID>::<Access Point ID>
+    # Ensures correct EFS and access point are mounted
     volumeHandle: fs-04029ef6534da55d6::fsap-0d6e7bdc5a4eae769
