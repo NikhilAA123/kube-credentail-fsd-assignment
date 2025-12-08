@@ -1,12 +1,30 @@
+# API version for PersistentVolumeClaim resource
+# v1 is used for core Kubernetes storage objects
 apiVersion: v1
+
+# Kind defines the Kubernetes resource type
+# PersistentVolumeClaim is a request for storage by a Pod
 kind: PersistentVolumeClaim
+
 metadata:
+  # Name of the PVC
+  # Referenced by Deployments/Pods to mount persistent storage
   name: shared-data-pvc-new
+
+  # Namespace where this PVC is created
   namespace: kube-credential-ns
+
 spec:
+  # Access mode required by the Pods
+  # ReadWriteMany allows multiple Pods to read/write simultaneously
   accessModes:
     - ReadWriteMany
+
   resources:
+    # Storage capacity requested
     requests:
       storage: 5Gi
+
+  # StorageClass used to bind this PVC to a matching PV
+  # Must match the storageClassName of the PersistentVolume
   storageClassName: manual-efs
