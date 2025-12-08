@@ -1,41 +1,88 @@
+# API version for Deployment resource
+# apps/v1 is the stable version for Deployments
 apiVersion: apps/v1
+
+# Kind specifies the Kubernetes object type
+# Deployment ensures desired number of API gateway pods are always running
 kind: Deployment
+
 metadata:
+  # Name of the Deployment
   name: api-gateway
+
+  # Namespace where this Deployment will be created
   namespace: kube-credential-ns
+
 spec:
+  # Number of API Gateway pod replicas
   replicas: 1
+
+  # Selector defines which Pods are managed by this Deployment
   selector:
     matchLabels:
+      # Pods with this label belong to this Deployment
       app: api-gateway
+
+  # Pod template definition
   template:
     metadata:
+      # Labels applied to the Pod
+      # Must match the selector labels
       labels:
         app: api-gateway
+
     spec:
       containers:
+        # Container running the API Gateway application
         - name: api-gateway
+          # Docker image stored in AWS ECR
           image: 885706662470.dkr.ecr.us-east-1.amazonaws.com/api-gateway:latest
+
+          # Always pull the latest image when the Pod starts
           imagePullPolicy: Always
+
+          # CPU and memory resource configuration
           resources:
             requests:
+              # Minimum memory guaranteed for the container
               memory: "64Mi"
+
+              # Minimum CPU guaranteed (0.25 core)
               cpu: "250m"
             limits:
+              # Maximum memory the container can consume
               memory: "128Mi"
+
+              # Maximum CPU allowed (0.5 core)
               cpu: "500m"
+
           ports:
+            # Port on which API Gateway listens for incoming requests
             - containerPort: 3000
+
           env:
+            # Application port configuration
             - name: PORT
               value: "3000"
+
+            # Secret key used to sign and verify JWT tokens
+            # (In production, this should come from Kubernetes Secrets)
             - name: JWT_SECRET
               value: "supersecretchangeme"
+
+            # Internal URL of the authentication service
+            # Kubernetes Service DNS name is used here
             - name: AUTH_URL
               value: "http://auth-service:4000"
+
+            # Internal URL of the issuance microservice
             - name: ISSUANCE_URL
               value: "http://issuance-service:8081"
+
+            # Internal URL of the verification microservice
             - name: VERIFICATION_URL
               value: "http://verification-service:8082"
+
+            # CORS configuration to allow requests from frontend
             - name: CORS_ORIGIN
               value: "*"
