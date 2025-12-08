@@ -1,12 +1,33 @@
+# API version for Service resource
+# v1 is used for core Kubernetes objects like Service
 apiVersion: v1
+
+# Kind defines the Kubernetes object type
+# Service provides a stable internal network endpoint for Pods
 kind: Service
+
 metadata:
+  # Name of the Service
+  # Other services (like the API Gateway) use this DNS name
   name: auth-service
+
+  # Namespace where the Service is created
   namespace: kube-credential-ns
+
 spec:
+  # Type of Service
+  # ClusterIP exposes the service only inside the Kubernetes cluster
   type: ClusterIP
+
+  # Selector connects the Service to auth-service Pods
+  # Traffic is routed to Pods with label app=auth-service
   selector:
     app: auth-service
+
   ports:
+    # Port configuration for the Service
     - port: 4000
+      # Port exposed internally by the Service
+
       targetPort: 4000
+      # Port on which the auth-service container is listening
