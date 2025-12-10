@@ -1,0 +1,6 @@
+com\kubecredential\auth\config\AuthProperties.class
+com\kubecredential\auth\AuthServiceApplication.class
+com\kubecredential\auth\model\User.class
+com\kubecredential\auth\dto\SignupRequest.class
+com\kubecredential\auth\dto\LoginRequest.class
+com\kubecredential\auth\dto\TokenVerifyRequest.class

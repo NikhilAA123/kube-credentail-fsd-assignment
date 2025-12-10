@@ -1,0 +1,20 @@
+server:
+  # Match your Node auth-service port (4000) so Kubernetes does not need changes
+  port: ${PORT:4000}
+
+auth:
+  # Same as process.env.JWT_SECRET (with default)
+  jwt-secret: ${JWT_SECRET:supersecretchangeme}
+
+  # We'll keep TOKEN_EXPIRES_IN as a string like "1h" (same as Node)
+  token-expires-in: ${TOKEN_EXPIRES_IN:1h}
+
+  # Same SALT_ROUNDS behavior as Node
+  salt-rounds: ${SALT_ROUNDS:10}
+
+  # Where to store users.json (matches your volume mount: /app/data)
+  data-dir: ${AUTH_DATA_DIR:/app/data}
+
+cors:
+  # We'll use this later for CORS config if needed
+  origin: ${CORS_ORIGIN:*}
